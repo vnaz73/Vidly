@@ -1,0 +1,36 @@
+﻿@model Vidly.ViewModels.CustomersViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Customers</h2>
+@if(!Model.Customers.Any())
+{
+<p>We don't have any customers yes...</p>
+}
+
+<table class="table table-­‐bordered  table-­‐hover">
+    <thead>
+        <tr>
+            <td>Customer</td>
+            <td>Discount Rate</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+        <tr>
+            <td>
+                @Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id })
+               
+            </td>
+            <td>
+               
+                @customer.MembershipType.Name
+            </td>
+        </tr>
+        }
+    </tbody>
+
+</table>
