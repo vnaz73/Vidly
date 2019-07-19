@@ -61,5 +61,13 @@ namespace Vidly.Controllers
             return View(movie);
         }
 
+        public IActionResult New()
+        {
+
+            var movies = _context.Movies.Include(c => c.Genre).ToList();
+
+
+            return View(movies);
+        }
     }
 }
