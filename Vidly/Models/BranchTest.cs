@@ -7,5 +7,7 @@ namespace Vidly.Models
 {
     public class BranchTest
     {
+
+
     }
 }
