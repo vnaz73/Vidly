@@ -10,57 +10,77 @@
 <p>
     <a class="btn btn-primary" asp-action="New">Create New</a>
 </p>
-<table class="table">
+<table id="movies" class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+               Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Genre
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReleaseDate)
+               Delete
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberInStock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GenreId)
-            </th>
-            <th></th>
+            
+           
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.ActionLink( item.Name, "Details", "Movies", new { id = item.Id })
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberInStock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre.Name)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.Id  }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+       
     </tbody>
 </table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            var table = $("#movies").DataTable({
+                processing: true,
+                serverSide: true,
+                ajax:{url:"/api/movies",dataSrc:""},
+
+                columns: [
+                    {
+                    data: "name",
+                    render: function (data, type, movie) {
+                        return "<a href= '/movies/Edit/" + movie.Id + "'>" + movie.name + "</a>";
+                    }
+                    },
+                    {
+                    data: "genre.name"
+                    },
+                    {
+                     data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-movie-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+
+            });
+
+            $("#movies").on("click", ".js-delete", function () {
+
+                var button = $(this);
+
+                bootbox.confirm("Are you sure to delete this movie?", function (result) {
+
+                    if (result) {
+                    $.ajax({
+                        url: "/api/movies/" + button.attr("data-movie-id"),
+                        method: "DELETE",
+                        success: function () {
+                            table.row(button.parents("tr")).remove().draw();
+                        }
+                    });
+                    }
+
+                })
+
+
+            });
+
+        });
+    </script>
+}
