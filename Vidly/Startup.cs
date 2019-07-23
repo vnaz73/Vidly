@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Vidly.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Vidly.Areas.Identity.Models;
 
 namespace Vidly
 {
@@ -38,7 +39,7 @@ namespace Vidly
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
+            services.AddDefaultIdentity<User>().AddRoles<Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
