@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,24 +18,9 @@ namespace Vidly.Controllers
 
         private ApplicationDbContext _context;
 
-        public MoviesController()
+        public MoviesController(ApplicationDbContext context)
         {
-            var builder = new ConfigurationBuilder();
-            // установка пути к текущему каталогу
-            builder.SetBasePath(Directory.GetCurrentDirectory());
-            // получаем конфигурацию из файла appsettings.json
-            builder.AddJsonFile("appsettings.json");
-            // создаем конфигурацию
-            var config = builder.Build();
-            // получаем строку подключения
-            string connectionString = config.GetConnectionString("DefaultConnection");
-
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var options = optionsBuilder
-                .UseSqlServer(connectionString)
-                .Options;
-
-            _context = new ApplicationDbContext(options);
+            _context = context;
         }
         protected override void Dispose(bool disposing)
         {
@@ -50,8 +36,9 @@ namespace Vidly.Controllers
 
             var movies = _context.Movies.Include(c => c.Genre).ToList();
 
-            
-            return View(movies);
+            if(User.IsInRole(RoleName.CanManageMovies))
+                return View("List",movies);
+            return View("ReadOnlyList", movies);
         }
         [Route("movies/details/{id}")]
         public ActionResult Details(int id)
@@ -61,6 +48,7 @@ namespace Vidly.Controllers
             return View(movie);
         }
 
+        [Authorize(Roles=RoleName.CanManageMovies)]
         public IActionResult New()
         {
 

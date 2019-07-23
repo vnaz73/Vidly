@@ -15,7 +15,7 @@ namespace Vidly.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -243,15 +243,18 @@ namespace Vidly.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("AddedDate");
+                    b.Property<DateTime?>("AddedDate")
+                        .IsRequired();
 
                     b.Property<int>("GenreId");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<int>("NumberInStock");
 
-                    b.Property<DateTime?>("ReleaseDate");
+                    b.Property<DateTime?>("ReleaseDate")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
