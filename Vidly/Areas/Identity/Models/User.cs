@@ -9,5 +9,6 @@ namespace Vidly.Areas.Identity.Models
     public class User: IdentityUser<string>
     {
         public string DrivingLicense { get; set; }
+        public string Phone { get; set; }
     }
 }

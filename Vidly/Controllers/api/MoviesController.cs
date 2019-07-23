@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Vidly.Controllers.api
         }
 
         // GET: api/Movies
+        [Authorize(Roles = RoleName.CanManageMovies)]
         [HttpGet]
         public IEnumerable<Movie> GetMovies()
         {
@@ -48,6 +50,7 @@ namespace Vidly.Controllers.api
         }
 
         // PUT: api/Movies/5
+        [Authorize(Roles = RoleName.CanManageMovies)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie([FromRoute] int id, [FromBody] Movie movie)
         {
@@ -83,6 +86,7 @@ namespace Vidly.Controllers.api
         }
 
         // POST: api/Movies
+        [Authorize(Roles = RoleName.CanManageMovies)]
         [HttpPost]
         public async Task<IActionResult> PostMovie([FromBody] Movie movie)
         {
@@ -98,6 +102,7 @@ namespace Vidly.Controllers.api
         }
 
         // DELETE: api/Movies/5
+        [Authorize(Roles = RoleName.CanManageMovies)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie([FromRoute] int id)
         {
