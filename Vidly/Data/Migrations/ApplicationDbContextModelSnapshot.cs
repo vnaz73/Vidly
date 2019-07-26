@@ -255,6 +255,8 @@ namespace Vidly.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<int>("NumberAvailable");
+
                     b.Property<int>("NumberInStock");
 
                     b.Property<DateTime?>("ReleaseDate")
@@ -265,6 +267,29 @@ namespace Vidly.Data.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("Vidly.Models.Rental", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CustomerId");
+
+                    b.Property<DateTime>("DateRented");
+
+                    b.Property<DateTime?>("DateReturned");
+
+                    b.Property<int>("MovieId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("Rentals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -325,6 +350,19 @@ namespace Vidly.Data.Migrations
                     b.HasOne("Vidly.Models.Genre", "Genre")
                         .WithMany()
                         .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vidly.Models.Rental", b =>
+                {
+                    b.HasOne("Vidly.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Vidly.Models.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

@@ -23,7 +23,7 @@ namespace Vidly.Controllers.api
         }
 
         // GET: api/Movies
-        [Authorize(Roles = RoleName.CanManageMovies)]
+       // [Authorize(Roles = RoleName.CanManageMovies)]
         [HttpGet]
         public IEnumerable<Movie> GetMovies()
         {
@@ -86,7 +86,7 @@ namespace Vidly.Controllers.api
         }
 
         // POST: api/Movies
-        [Authorize(Roles = RoleName.CanManageMovies)]
+        //[Authorize(Roles = RoleName.CanManageMovies)]
         [HttpPost]
         public async Task<IActionResult> PostMovie([FromBody] Movie movie)
         {
@@ -95,6 +95,7 @@ namespace Vidly.Controllers.api
                 return BadRequest(ModelState);
             }
 
+            movie.NumberInStock = movie.NumberInStock;
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 

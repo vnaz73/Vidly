@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewData["Title"] = "New";
+}
+
+<h2>New Rental Form</h2>
+<form id="newRental">
+
+    <div class="form-group">
+        <label>Customer</label>
+        <select id="customer" required type="text" value=""> </select>
+    </div>
+
+    <div class="form-group">
+        <label>Movies</label>
+        <select id="movies" required type="text" value="" ></select>
+    </div>
+
+    <button id="save"  class="btn btn-primary">Save</button>
+
+</form>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            
+            var options = [];
+            var options2 = [];
+            $.getJSON("/api/customers", function (data) {
+
+                options = data.map(item => {
+                     const container = {};
+
+                container.id = item.id;
+                container.title = item.name;
+
+                return container;
+                   
+                });
+                //console.log(options);
+                 $(function () {
+               
+                customerSelect = $('#customer').selectize({
+                  maxItems: null,
+					valueField: 'id',
+					labelField: 'title',
+					searchField: 'title',
+					options: options,
+					create: false
+                });
+            });
+            });
+
+
+             $.getJSON("/api/movies", function (data) {
+
+                options2 = data.map(item => {
+                     const container = {};
+
+                container.id = item.id;
+                container.title = item.name;
+
+                return container;
+                   
+                });
+                //console.log(options);
+                 $(function () {
+               
+                moviesSelect = $('#movies').selectize({
+                  maxItems: null,
+					valueField: 'id',
+					labelField: 'title',
+					searchField: 'title',
+					options: options2,
+					create: false
+                });
+            });
+            });
+
+            //$("#save").click(function ()  {
+            //    //.preventDefault();
+            //    var person = new Object();
+            //    person.customerId = 3;
+            //    //person.movieIds = [2];
+            //    var param = JSON.stringify({
+            //        customerId: 3
+            //    })
+            //    $.ajax({
+            //        url: '/api/Rental',
+            //        type: 'POST',
+            //        dataType: 'json',
+            //        contentType: 'application/json',
+            //        data: param,
+            //        success: function (data, textStatus, xhr) {
+            //            console.log(data);
+            //        },
+            //        error: function (xhr, textStatus, errorThrown) {
+            //            console.log('Error in Operation');
+            //        }
+            //    });
+            //});
+            
+
+            var validator = $("#newRental").validate({
+                submitHandler: function () {
+                   // e.preventDefault();
+                    var vm = JSON.stringify({
+                        customerId: customerSelect[0].selectize.items[0],
+                        movieIds: moviesSelect[0].selectize.items
+                    });
+
+                    $.ajax({
+                        url: "/api/Rental",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: vm
+                    })
+                        .done(function () {
+                            toastr.success("Rental successfully done");
+                            moviesSelect[0].selectize.clear();
+                            customerSelect[0].selectize.clear();
+                            validator.resetForm();
+                        })
+                        .fail(function () {
+                            toastr.error("Rental fail");
+                        });
+                    return false;
+                }
+            });
+
+        });
+    </script>
+}
+

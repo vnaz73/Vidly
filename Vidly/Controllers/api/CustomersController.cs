@@ -21,6 +21,7 @@ namespace Vidly.Controllers.api
             _context = context;
         }
 
+
         // GET: api/Customers
         [HttpGet]
         public IEnumerable<Customer> GetCustomers()
